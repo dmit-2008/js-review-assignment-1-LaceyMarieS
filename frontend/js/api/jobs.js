@@ -1,6 +1,17 @@
-// your code goes here.
+// const getJobs = (url) => {
+//     return fetch(url)
+//         .then((response)=> {
+//             console.log(response)
+//             return response.json()
+            
+//         }).then((data)=> {
+//             return data
+//         })
+// }
 
-export async function getJobs(url = 'http://localhost:3000/jobs'){
+export async function getJobs(url){
     const res = await fetch(url)
     return await res.json()
 }
+
+// export{getJobs}

@@ -25,7 +25,7 @@ app.get('/jobs', async (req, res) => {
   try {
 
     const { q } = req.query;
-    
+
     if (!q) {
     
       const jobs = await prisma.job.findMany();
