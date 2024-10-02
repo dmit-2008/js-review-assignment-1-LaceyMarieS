@@ -23,9 +23,10 @@ app.listen(3000, () => {
 // GET endpoint to list jobs and search for jobs
 app.get('/jobs', async (req, res) => {
   try {
-    const { q } = req.query;
+    const { search } = req.query;
+    console.log(search)
 
-    if (!q) {
+    if (!search) {
     
       const jobs = await prisma.job.findMany();
       res.json(jobs);
@@ -36,8 +37,8 @@ app.get('/jobs', async (req, res) => {
     const jobs = await prisma.job.findMany({
       where:{
         OR: [
-          { title: { contains: q, mode: 'insensitive'} },
-          { description: { contains: q, mode: 'insensitive' } },
+          { title: { contains: search} },
+          { description: { contains: search} },
         ]
       }
     });

@@ -8,12 +8,9 @@ const jobListElement = document.querySelector("#searched-jobs")
 const jobDetailsElement = document.querySelector("#job-details-card")
 let jobs = []
 
-
-
 //render('http://localhost:3000/jobs/7')
-//render('http://localhost:3000/jobs?search=Software')
+//renderJobList('http://localhost:3000/jobs?q=Software')
 //renderJobList('http://localhost:3000/jobs')
-
 
 //EVENTS
 document.querySelector("#search-jobs-form").addEventListener("submit", (e) => {
