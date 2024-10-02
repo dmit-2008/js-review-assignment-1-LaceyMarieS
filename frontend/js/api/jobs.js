@@ -10,6 +10,7 @@
 // }
 
 export async function getJobs(url){
+    console.log(url)
     const res = await fetch(url)
     return await res.json()
 }
