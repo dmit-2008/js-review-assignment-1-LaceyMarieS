@@ -24,7 +24,6 @@ app.listen(3000, () => {
 app.get('/jobs', async (req, res) => {
   try {
     const { search } = req.query;
-    console.log(search)
 
     if (!search) {
     
@@ -42,7 +41,6 @@ app.get('/jobs', async (req, res) => {
         ]
       }
     });
-    console.log(jobs)
     res.json(jobs);
   } catch (error) {
     console.error('Error searching for jobs:', error);
@@ -76,6 +74,7 @@ app.get('/jobs/:id', async (req, res) => {
 app.post('/saved-jobs', async (req, res) => {
   try {
     // parse the body of the request
+    console.log(req.body)
     const { jobId } = req.body;
 
     // Create a new saved job record in the database
