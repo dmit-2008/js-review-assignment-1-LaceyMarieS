@@ -8,6 +8,10 @@ import { saveJob } from './api/jobs';
 //VARIABLES
 const jobListElement = document.querySelector("#searched-jobs")
 const jobDetailsElement = document.querySelector("#job-details-card")
+const searchTab = document.querySelector("#search-tab")
+const bookmarkTab = document.querySelector("#bookmark-tab")
+const searchPage = document.querySelector("#search-jobs-tab")
+const bookmarkPage = document.querySelector("#my-jobs-tab")
 let jobs = []
 
 
@@ -27,25 +31,42 @@ jobListElement.addEventListener("click", (e)=>{
 
 jobDetailsElement.addEventListener("click", (e) =>{
     if(e.target.classList.contains('save-job')){
-        //saveJob(e.currentTarget.id)
-        //console.log(e.target.id)
         const saveJob = getJobs(`http://localhost:3000/jobs/${e.target.id}`).then((data) =>{
             saveJob(data)
         })
-        
-        //console.log()
     }
 })
 
-// getJobs(`http://localhost:3000/jobs/7`).then((data) =>{
+bookmarkTab.addEventListener("click", (e) =>{
+    if(e.target.classList.contains("active") === false){
+        bookmarkTab.classList.add("active")
+        bookmarkPage.classList.remove("d-none")
+        bookmarkPage.classList.add("album")
+
+        searchTab.classList.remove("active")
+        searchPage.classList.remove("album")
+        searchPage.classList.add("d-none")
+
+    }
+});
+
+searchTab.addEventListener("click", (e) =>{
+    if(e.target.classList.contains("active") === false){
+        searchTab.classList.add("active")
+        searchPage.classList.remove("d-none")
+        searchPage.classList.add("album")
+
+        bookmarkTab.classList.remove("active")
+        bookmarkPage.classList.remove("album")
+        bookmarkPage.classList.add("d-none")
+    }
+});
+
+
+
+// getJobs(`http://localhost:3000/saved-jobs`).then((data) =>{
 //     console.log(data)
 // })
-
-// function getJobtoSave(id){
-//     // getJobs(`http://localhost:3000/jobs/${id}`).then((data) =>{
-//     //     console.log(data)
-//     // })
-// }
 
 
 //METHODS
@@ -104,6 +125,8 @@ function renderJobDetails(id){
             `
     })
 }
+
+
 
 
 

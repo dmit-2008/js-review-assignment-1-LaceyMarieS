@@ -74,7 +74,6 @@ app.get('/jobs/:id', async (req, res) => {
 app.post('/saved-jobs', async (req, res) => {
   try {
     // parse the body of the request
-    console.log(req.body)
     const { jobId } = req.body;
 
     // Create a new saved job record in the database
