@@ -7,6 +7,7 @@ import { saveJob } from './api/jobs';
 
 //VARIABLES
 const jobListElement = document.querySelector("#searched-jobs")
+const bookmarkListElement = document.querySelector("#my-jobs")
 const jobDetailsElement = document.querySelector("#job-details-card")
 const searchTab = document.querySelector("#search-tab")
 const bookmarkTab = document.querySelector("#bookmark-tab")
@@ -47,6 +48,7 @@ bookmarkTab.addEventListener("click", (e) =>{
         searchPage.classList.remove("album")
         searchPage.classList.add("d-none")
 
+        renderSavedJobs()
     }
 });
 
@@ -126,7 +128,34 @@ function renderJobDetails(id){
     })
 }
 
-
+function renderSavedJobs(){
+    bookmarkListElement.innerHTML = ' '
+    jobs = getJobs('http://localhost:3000/saved-jobs').then((job) =>{
+        if(jobs){
+            job.forEach((jobId =>{
+                getJobs(`http://localhost:3000/jobs/${jobId.jobId}`).then((job) =>{
+                    bookmarkListElement.innerHTML +=
+                        `
+                        <li class="job-card card my-1" style="width: 18rem;">
+                        <div class="card-header">${job.company}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">${job.title}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">${job.location}</h6>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Posted ${job.date_posted}</h6>
+                            <button class="btn btn-primary view-job-button" id="${job.id}">View Job</button>
+                        </div>
+                        </li>
+                        `
+                })
+            }))
+        }else{
+            jobListElement.innerHTML =
+                `
+                    <div class="text-dark">No Jobs Saved</div>
+                `
+        }
+    })
+}
 
 
 

@@ -4,11 +4,6 @@ export async function getJobs(url){
     return await res.json()
 }
 
-export async function getSavedJobs(url){
-    const res = await fetch(url)
-    return await res.json()
-}
-
 export async function saveJob(job){
     const requestHeader = new Headers()
     requestHeader.append('content-Type', 'application/json')
