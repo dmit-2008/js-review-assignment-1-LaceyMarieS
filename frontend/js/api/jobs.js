@@ -5,9 +5,14 @@ export async function getJobs(url){
 }
 
 export async function saveJob(job){
+    const data = {
+        jobId: job.id,
+        job: job
+    }
+
     const requestHeader = new Headers()
     requestHeader.append('content-Type', 'application/json')
-    const payload = JSON.stringify(job)
+    const payload = JSON.stringify(data)
     const requestObject = {
         method: 'POST',
         headers: requestHeader,
@@ -17,4 +22,11 @@ export async function saveJob(job){
     
     const res = await fetch('http://localhost:3000/saved-jobs', requestObject)
     return res.json()
+}
+
+export async function deleteRequest(id){
+    const res = await fetch(`http://localhost:3000/saved-jobs/${id}`,{
+        method: 'DELETE',
+    })
+    return await res.json()
 }

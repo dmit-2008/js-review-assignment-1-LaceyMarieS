@@ -9,13 +9,15 @@ import { saveJob } from './api/jobs';
 const jobListElement = document.querySelector("#searched-jobs")
 const bookmarkListElement = document.querySelector("#my-jobs")
 const jobDetailsElement = document.querySelector("#job-details-card")
+const bookmarkDetailsElement = document.querySelector("#bookmark-details-card")
 const searchTab = document.querySelector("#search-tab")
 const bookmarkTab = document.querySelector("#bookmark-tab")
 const searchPage = document.querySelector("#search-jobs-tab")
 const bookmarkPage = document.querySelector("#my-jobs-tab")
 let jobs = []
 
-
+//INITIALIZE JOBS
+renderJobList(`http://localhost:3000/jobs`)
 
 //EVENTS
 document.querySelector("#search-jobs-form").addEventListener("submit", (e) => {
@@ -26,17 +28,24 @@ document.querySelector("#search-jobs-form").addEventListener("submit", (e) => {
 
 jobListElement.addEventListener("click", (e)=>{
     if(e.target.classList.contains('view-job-button')){
-        renderJobDetails(e.target.id)
+        renderJobDetails(e.target.id, jobDetailsElement)
+    }
+})
+
+bookmarkListElement.addEventListener("click", (e)=>{
+    if(e.target.classList.contains('view-job-button')){
+        renderJobDetails(e.target.id, bookmarkDetailsElement)
     }
 })
 
 jobDetailsElement.addEventListener("click", (e) =>{
     if(e.target.classList.contains('save-job')){
-        const saveJob = getJobs(`http://localhost:3000/jobs/${e.target.id}`).then((data) =>{
+        getJobs(`http://localhost:3000/jobs/${e.target.id}`).then((data) =>{
             saveJob(data)
         })
     }
 })
+
 
 bookmarkTab.addEventListener("click", (e) =>{
     if(e.target.classList.contains("active") === false){
@@ -66,16 +75,11 @@ searchTab.addEventListener("click", (e) =>{
 
 
 
-// getJobs(`http://localhost:3000/saved-jobs`).then((data) =>{
-//     console.log(data)
-// })
-
-
 //METHODS
 function renderJobList(url){
     jobListElement.innerHTML = ' '
     jobs = getJobs(url).then((data) =>{
-        if(jobs){
+        if(data.length !== 0){
             data.forEach((job =>{
                 jobListElement.innerHTML +=
                     `
@@ -99,11 +103,11 @@ function renderJobList(url){
     })
 }
 
-function renderJobDetails(id){
-    jobDetailsElement.innerHTML = ' '
+function renderJobDetails(id, element){
+    element.innerHTML = ' '
     url = `http://localhost:3000/jobs/${id}`
     jobs = getJobs(url).then((job) =>{
-        jobDetailsElement.innerHTML +=
+        element.innerHTML +=
             `
                 <div class="card">
                 <div class="card-body">
@@ -116,11 +120,11 @@ function renderJobDetails(id){
                     <p class="card-text">${job.description}</p>
                     <h5 class="card-subtitle mb-2">Qualifications</h5>
                     <p class="card-text">${job.qualifications}</p>
-                    <button class="btn btn-success save-job" id="${job.id}">
+                    <button class="btn btn-secondary save-job" id="${job.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
                         <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
                     </svg>
-                    Save Job
+                    Remove Saved Job
                     </button>
                 </div>
                 </div>
@@ -156,7 +160,3 @@ function renderSavedJobs(){
         }
     })
 }
-
-
-
-//  "main": "index.js",   --> taken from package to try and fix build

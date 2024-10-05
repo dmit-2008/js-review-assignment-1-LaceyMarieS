@@ -102,3 +102,19 @@ app.get('/saved-jobs', async (req, res) => {
     res.status(500).json({ error: 'An internal server error occurred' });
   }
 });
+
+//DELETE endpoint to delete a job by ID
+app.delete('/saved-job/:jobId', async (req,res) => {
+  try{
+    const { jobId } = req.body;
+    
+    const savedJob = await prisma.savedJob.delete({
+      where: {
+        jobId: parseInt(jobId),
+      },
+    });
+  }catch (error){
+    console.error('Error fetching saved jobs:', error);
+    res.status(500).json({ error: 'An internal server error occurred' });
+  }
+})
