@@ -48,14 +48,14 @@ jobListElement.addEventListener("click", (e)=>{
 
 //click view job button on bookmark page
 bookmarkListElement.addEventListener("click", (e)=>{
-    if(e.target.classList.contains('view-job-button')){
-        renderJobDetails(e.target.id, bookmarkDetailsElement)
+    if(e.target.classList.contains('view-job-button') === true && e.target.classList.contains('bookmarked') === false){
+        renderJobDetails(e.target.id, bookmarkDetailsElement, false)
     }
 })
 
 //click save job button in job details
 jobDetailsElement.addEventListener("click", (e) =>{
-    if(e.target.classList.contains('save-job')){
+    if(e.target.classList.contains('save-job') === true && e.target.classList.contains('bookmarked') === false){
         getJobs(`http://localhost:3000/jobs/${e.target.id}`).then((data) =>{
             const savedJob = saveJob(data)
             savedJob.then((data) =>{
@@ -63,6 +63,10 @@ jobDetailsElement.addEventListener("click", (e) =>{
                 console.log(`Job ID: ${data.jobId} Saved`)
             })
         })
+        e.target.classList.add("bookmarked")
+        e.target.classList.remove("btn-success")
+        e.target.classList.add("btn-secondary")
+        e.target.innerHTML = "Saved"
     }
 })
 
@@ -131,28 +135,28 @@ function renderJobDetails(id, element){
     url = `http://localhost:3000/jobs/${id}`
     jobs = getJobs(url).then((job) =>{
         if(element === jobDetailsElement){
-        element.innerHTML +=
-            `
-                <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">${job.title}</h5>
-                    <h4 class="card-subtitle mb-2 text-body-secondary pb-3">${job.company}</h6>
-                    <h6 class="card-subtitle mb-2 text-body-secondary ">${job.location}</h6>
-                    <h6 class="card-subtitle mb-2 text-body-secondary pb-3">Posted ${job.date_posted}</h6>
-                
-                    <h5 class="card-subtitle mb-2">Description</h5>
-                    <p class="card-text">${job.description}</p>
-                    <h5 class="card-subtitle mb-2">Qualifications</h5>
-                    <p class="card-text">${job.qualifications}</p>
-                    <button class="btn btn-success save-job" id="${job.id}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
-                    </svg>
-                    Save Job
-                    </button>
-                </div>
-                </div>
-            `
+            element.innerHTML +=
+                `
+                    <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">${job.title}</h5>
+                        <h4 class="card-subtitle mb-2 text-body-secondary pb-3">${job.company}</h6>
+                        <h6 class="card-subtitle mb-2 text-body-secondary ">${job.location}</h6>
+                        <h6 class="card-subtitle mb-2 text-body-secondary pb-3">Posted ${job.date_posted}</h6>
+                    
+                        <h5 class="card-subtitle mb-2">Description</h5>
+                        <p class="card-text">${job.description}</p>
+                        <h5 class="card-subtitle mb-2">Qualifications</h5>
+                        <p class="card-text">${job.qualifications}</p>
+                        <button class="btn btn-success save-job" id="${job.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                        </svg>
+                        Save Job
+                        </button>
+                    </div>
+                    </div>
+                `
         }else{
             element.innerHTML +=
             `
