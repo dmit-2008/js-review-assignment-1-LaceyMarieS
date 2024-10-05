@@ -103,21 +103,11 @@ app.get('/saved-jobs', async (req, res) => {
   }
 });
 
-//DELETE endpoint to delete a job by ID
-app.delete('/saved-jobs/:id', async (req,res) => {
+//DELETE endpoint to delete all saved jobs
+app.delete('/saved-jobs', async (req,res) => {
   try{
-    const { id } = req.params;
-    const savedJob = await prisma.savedJob.delete({
-      where: {
-        jobId: parseInt(id),
-      },
-    });
+    const savedJob = await prisma.savedJob.deleteMany({})
 
-    if (!savedJob) {
-      res.status(404).json({ error: 'Job not found' });
-      return;
-    }
-    
     res.json(savedJob)
   }catch (error){
     console.error('Error fetching saved jobs:', error);
@@ -125,25 +115,3 @@ app.delete('/saved-jobs/:id', async (req,res) => {
   }
 })
 
-
-//GET saved jobs by JobID
-app.get('/saved-jobs/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const savedJob = await prisma.job.findUnique({
-      where: {
-        jobId: parseInt(id)
-      }
-    });
-
-    if (!savedJob) {
-      res.status(404).json({ error: 'Job not found' });
-      return;
-    }
-
-    res.json(savedJob);
-  } catch (error) {
-    console.error('Error fetching job:', error);
-    res.status(500).json({ error: 'An internal server error occurred' });
-  }
-})

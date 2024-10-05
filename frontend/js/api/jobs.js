@@ -24,8 +24,8 @@ export async function saveJob(job){
     return res.json()
 }
 
-export async function deleteJob(id){
-    const res = await fetch(`http://localhost:3000/saved-jobs/${id}`,{
+export async function deleteJob(url){
+    const res = await fetch(url,{
         method: 'DELETE',
     })
     return await res.json()

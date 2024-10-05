@@ -6,6 +6,8 @@ import { saveJob } from './api/jobs';
 import { deleteJob } from './api/jobs';
 
 
+
+
 //VARIABLES
 const jobListElement = document.querySelector("#searched-jobs")
 const bookmarkListElement = document.querySelector("#my-jobs")
@@ -17,10 +19,20 @@ const searchPage = document.querySelector("#search-jobs-tab")
 const bookmarkPage = document.querySelector("#my-jobs-tab")
 let jobs = []
 
-//INITIALIZE JOBS
+
+
+
+//INITIALIZE
+//get all jobs
 renderJobList(`http://localhost:3000/jobs`)
+//clear old saved jobs
+deleteJob(`http://localhost:3000/saved-jobs`)
+
+
+
 
 //EVENTS
+//submit form
 document.querySelector("#search-jobs-form").addEventListener("submit", (e) => {
     e.preventDefault()
     const search =  document.querySelector("#query-input").value
@@ -45,17 +57,12 @@ bookmarkListElement.addEventListener("click", (e)=>{
 jobDetailsElement.addEventListener("click", (e) =>{
     if(e.target.classList.contains('save-job')){
         getJobs(`http://localhost:3000/jobs/${e.target.id}`).then((data) =>{
-            saveJob(data)
+            const savedJob = saveJob(data)
+            savedJob.then((data) =>{
+                renderSavedJobs()
+                console.log(`Job ID: ${data.jobId} Saved`)
+            })
         })
-    }
-})
-
-//click remove saved job button in bookmarked job details
-bookmarkDetailsElement.addEventListener("click", (e) =>{
-    if(e.target.classList.contains('remove-job')){
-        console.log(e.target.id)
-        //deleteJob(e.target.id)
-        //renderSavedJobs()
     }
 })
 
@@ -86,6 +93,8 @@ searchTab.addEventListener("click", (e) =>{
         bookmarkPage.classList.add("d-none")
     }
 });
+
+
 
 
 
@@ -174,7 +183,8 @@ function renderJobDetails(id, element){
 function renderSavedJobs(){
     bookmarkListElement.innerHTML = ' '
     jobs = getJobs('http://localhost:3000/saved-jobs').then((job) =>{
-        if(jobs){
+
+        if(job.length !== 0){
             job.forEach((jobId =>{
                 getJobs(`http://localhost:3000/jobs/${jobId.jobId}`).then((job) =>{
                     bookmarkListElement.innerHTML +=
@@ -192,7 +202,7 @@ function renderSavedJobs(){
                 })
             }))
         }else{
-            jobListElement.innerHTML =
+            bookmarkListElement.innerHTML =
                 `
                     <div class="text-dark">No Jobs Saved</div>
                 `
