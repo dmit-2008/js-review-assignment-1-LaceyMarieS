@@ -3,6 +3,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { getJobs } from './api/jobs';
 import { saveJob } from './api/jobs';
+import { deleteJob } from './api/jobs';
 
 
 //VARIABLES
@@ -26,18 +27,21 @@ document.querySelector("#search-jobs-form").addEventListener("submit", (e) => {
     renderJobList(`http://localhost:3000/jobs?search=${search}`)
 });
 
+//Click view job button on results page
 jobListElement.addEventListener("click", (e)=>{
     if(e.target.classList.contains('view-job-button')){
         renderJobDetails(e.target.id, jobDetailsElement)
     }
 })
 
+//click view job button on bookmark page
 bookmarkListElement.addEventListener("click", (e)=>{
     if(e.target.classList.contains('view-job-button')){
         renderJobDetails(e.target.id, bookmarkDetailsElement)
     }
 })
 
+//click save job button in job details
 jobDetailsElement.addEventListener("click", (e) =>{
     if(e.target.classList.contains('save-job')){
         getJobs(`http://localhost:3000/jobs/${e.target.id}`).then((data) =>{
@@ -46,7 +50,16 @@ jobDetailsElement.addEventListener("click", (e) =>{
     }
 })
 
+//click remove saved job button in bookmarked job details
+bookmarkDetailsElement.addEventListener("click", (e) =>{
+    if(e.target.classList.contains('remove-job')){
+        console.log(e.target.id)
+        //deleteJob(e.target.id)
+        //renderSavedJobs()
+    }
+})
 
+//click on bookmark tab
 bookmarkTab.addEventListener("click", (e) =>{
     if(e.target.classList.contains("active") === false){
         bookmarkTab.classList.add("active")
@@ -61,6 +74,7 @@ bookmarkTab.addEventListener("click", (e) =>{
     }
 });
 
+//click on search tab
 searchTab.addEventListener("click", (e) =>{
     if(e.target.classList.contains("active") === false){
         searchTab.classList.add("active")
@@ -107,6 +121,7 @@ function renderJobDetails(id, element){
     element.innerHTML = ' '
     url = `http://localhost:3000/jobs/${id}`
     jobs = getJobs(url).then((job) =>{
+        if(element === jobDetailsElement){
         element.innerHTML +=
             `
                 <div class="card">
@@ -120,7 +135,30 @@ function renderJobDetails(id, element){
                     <p class="card-text">${job.description}</p>
                     <h5 class="card-subtitle mb-2">Qualifications</h5>
                     <p class="card-text">${job.qualifications}</p>
-                    <button class="btn btn-secondary save-job" id="${job.id}">
+                    <button class="btn btn-success save-job" id="${job.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                    </svg>
+                    Save Job
+                    </button>
+                </div>
+                </div>
+            `
+        }else{
+            element.innerHTML +=
+            `
+                <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">${job.title}</h5>
+                    <h4 class="card-subtitle mb-2 text-body-secondary pb-3">${job.company}</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary ">${job.location}</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary pb-3">Posted ${job.date_posted}</h6>
+                
+                    <h5 class="card-subtitle mb-2">Description</h5>
+                    <p class="card-text">${job.description}</p>
+                    <h5 class="card-subtitle mb-2">Qualifications</h5>
+                    <p class="card-text">${job.qualifications}</p>
+                    <button class="btn btn-secondary remove-job" id="${job.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
                         <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
                     </svg>
@@ -129,6 +167,7 @@ function renderJobDetails(id, element){
                 </div>
                 </div>
             `
+        }
     })
 }
 
